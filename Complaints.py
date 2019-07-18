@@ -23,7 +23,6 @@ def entry():
         driver.execute_script(passwordjs)
     except:
         pass
-
     # 按登陆按钮
     time.sleep(5)
     driver.find_element_by_xpath(
@@ -40,18 +39,18 @@ def entry():
             driver.find_element_by_id("message_sms_login").click()
         except Exception as e:
             print(e)
-            print("出问题了，请再试一遍")
+            print("Please try again, a problem occured")
             driver.quit()
 
         # 请输入收到的验证码，每输入一位就按一下回车，输入最后一位后也需要按回车
-        print("您开启了验证保护，请在终端输入输入验证码")
-        print("每输入一位按一次回车")
-        veriCode1 = input("验证码第1位:")
-        veriCode2 = input("验证码第2位:")
-        veriCode3 = input("验证码第3位:")
-        veriCode4 = input("验证码第4位:")
-        veriCode5 = input("验证码第5位:")
-        veriCode6 = input("验证码第6位:")
+        print("Please type in vericode in the terminal")
+        print("Press enter every time")
+        veriCode1 = input("First number of your vericode:")
+        veriCode2 = input("Second number of your vericode:")
+        veriCode3 = input("Third number of your vericode:")
+        veriCode4 = input("Fourth number of your vericode:")
+        veriCode5 = input("Fifth number of your vericode:")
+        veriCode6 = input("Sixth number of your vericode:")
         
         try:
             time.sleep(2)
@@ -75,10 +74,10 @@ def entry():
             time.sleep(1)
             driver.find_element_by_id("message_confirm").click()
         except: 
-            print("出问题了，请再试一遍")
+            print("Please try again, a problem occured")
             driver.quit()
 
-    print("登陆成功")
+    print("Successfully logged in")
     time.sleep(5)
     driver.get("https://www.weibo.com/u/5536456430?refer_flag=1005055013_&is_all=1")
     time.sleep(2)
@@ -107,7 +106,7 @@ def entry():
         time.sleep(2)
         wb = wbelements[totalwb]
         wbheight = wb.size["height"]
-        print("这是第 {} 条微博").format(totalwb)
+        print("This is the {} weibo").format(totalwb)
         # 如果有展开全文则点击展开全文并更新本条微博大小
         try:
             wb.find_element_by_class_name("WB_text_opt").click()
@@ -165,13 +164,13 @@ def entry():
                 print(l)
                 pass
             totalsuccess += 1    
-            print("已成功举报 {} 条微博").format(totalsuccess)
+            print("You have reported {} weibo").format(totalsuccess)
             time.sleep(1)
         except:
             pass
-    print("反黑完成！")
+    print("Success!")
     driver.quit()
-
+print 
 master = tk.Tk()
 master.title("阿云奶盖的反黑小程序")
 label1 = tk.Label(master, text="用户名").grid(row=0)
