@@ -4,6 +4,7 @@ import time
 import Tkinter as tk
 from selenium.common.exceptions import NoSuchElementException
 from functools import partial
+
 def entry():
     driver = webdriver.Chrome()
     driver.maximize_window()
@@ -23,6 +24,7 @@ def entry():
         driver.execute_script(passwordjs)
     except:
         pass
+
     # 按登陆按钮
     time.sleep(5)
     driver.find_element_by_xpath(
@@ -35,50 +37,62 @@ def entry():
         pass
     except:
         try:
-            time.sleep(10)
-            driver.find_element_by_id("message_sms_login").click()
+            veri = raw_input("Please type in verification code: ")
+            driver.find_element_by_xpath(r'//*[@id="pl_login_form"]/div/div[3]/div[3]/div/input').send_keys(veri)
+            driver.find_element_by_xpath(r'//*[@id="pl_login_form"]/div/div[3]/div[6]/a').click()
         except Exception as e:
             print(e)
-            print("Please try again, a problem occured")
-            driver.quit()
 
-        # 请输入收到的验证码，每输入一位就按一下回车，输入最后一位后也需要按回车
-        print("Please type in vericode in the terminal")
-        print("Press enter every time")
-        veriCode1 = input("First number of your vericode:")
-        veriCode2 = input("Second number of your vericode:")
-        veriCode3 = input("Third number of your vericode:")
-        veriCode4 = input("Fourth number of your vericode:")
-        veriCode5 = input("Fifth number of your vericode:")
-        veriCode6 = input("Sixth number of your vericode:")
-        
-        try:
-            time.sleep(2)
-            driver.find_element_by_xpath(
-                r'//*[@id="message_content"]/div/div[1]/input[1]').send_keys(veriCode1)
-            time.sleep(1)
-            driver.find_element_by_xpath(
-                r'//*[@id="message_content"]/div/div[1]/input[2]').send_keys(veriCode2)
-            time.sleep(1)
-            driver.find_element_by_xpath(
-                r'//*[@id="message_content"]/div/div[1]/input[3]').send_keys(veriCode3)
-            time.sleep(1)
-            driver.find_element_by_xpath(
-                r'//*[@id="message_content"]/div/div[1]/input[4]').send_keys(veriCode4)
-            time.sleep(1)
-            driver.find_element_by_xpath(
-                r'//*[@id="message_content"]/div/div[1]/input[5]').send_keys(veriCode5)
-            time.sleep(1)
-            driver.find_element_by_xpath(
-                r'//*[@id="message_content"]/div/div[1]/input[6]').send_keys(veriCode6)
-            time.sleep(1)
-            driver.find_element_by_id("message_confirm").click()
-        except: 
-            print("Please try again, a problem occured")
-            driver.quit()
+            try:
+                time.sleep(10)
+                driver.find_element_by_id("message_sms_login").click()
+            except Exception as e:
+                print(e)
+                print("Please try again, a problem occured")
+                #driver.quit()
 
-    print("Successfully logged in")
+            # 请输入收到的验证码，每输入一位就按一下回车，输入最后一位后也需要按回车
+            print("Please type in vericode in the terminal")
+            print("Press enter every time")
+            veriCode1 = input("First number of your vericode:")
+            veriCode2 = input("Second number of your vericode:")
+            veriCode3 = input("Third number of your vericode:")
+            veriCode4 = input("Fourth number of your vericode:")
+            veriCode5 = input("Fifth number of your vericode:")
+            veriCode6 = input("Sixth number of your vericode:")
+            
+            try:
+                time.sleep(2)
+                driver.find_element_by_xpath(
+                    r'//*[@id="message_content"]/div/div[1]/input[1]').send_keys(veriCode1)
+                time.sleep(1)
+                driver.find_element_by_xpath(
+                    r'//*[@id="message_content"]/div/div[1]/input[2]').send_keys(veriCode2)
+                time.sleep(1)
+                driver.find_element_by_xpath(
+                    r'//*[@id="message_content"]/div/div[1]/input[3]').send_keys(veriCode3)
+                time.sleep(1)
+                driver.find_element_by_xpath(
+                    r'//*[@id="message_content"]/div/div[1]/input[4]').send_keys(veriCode4)
+                time.sleep(1)
+                driver.find_element_by_xpath(
+                    r'//*[@id="message_content"]/div/div[1]/input[5]').send_keys(veriCode5)
+                time.sleep(1)
+                driver.find_element_by_xpath(
+                    r'//*[@id="message_content"]/div/div[1]/input[6]').send_keys(veriCode6)
+                time.sleep(1)
+                driver.find_element_by_id("message_confirm").click()
+            except: 
+                print("Please try again, a problem occured")
+                driver.quit()
+    print("Login success")
     time.sleep(5)
+    complain(driver)
+    comment(driver)
+    clean(driver)
+    driver.quit()
+
+def complain(driver):
     driver.get("https://www.weibo.com/u/5536456430?refer_flag=1005055013_&is_all=1")
     time.sleep(2)
     totalscroll = 0
@@ -137,7 +151,70 @@ def entry():
         scroll = "window.scrollBy(10000, {})".format(wbheight)
         driver.execute_script(scroll)
         totalwb += 1
+        
+    actualcomplain(hreflist,driver)
+    print("Success!")
 
+    
+
+def comment(driver):
+    print("Now we start to report the weibo listed in comments...")
+    time.sleep(5)
+    driver.get("https://www.weibo.com/5536456430/IjvJ8Awuv?filter=hot&root_comment_id=0&type=comment")
+    time.sleep(2)
+    totalscroll = 0
+    hreflist = []
+    while totalscroll < 4:
+        scrolldown = "window.scrollTo(10000,document.body.scrollHeight)"
+        driver.execute_script(scrolldown)
+        time.sleep(4)
+        totalscroll += 1
+
+    scrollup = "window.scrollTo(10000,0)"
+    driver.execute_script(scrollup)
+    totalwb = 0
+    totalhref = 0
+    wbs = "return document.getElementsByClassName('WB_text')"
+    wbelements = driver.execute_script(wbs)
+    while totalwb < len(wbelements):
+        time.sleep(2)
+        wb = wbelements[totalwb]
+        wbheight = wb.size["height"]
+        # 如果有展开全文则点击展开全文并更新本条微博大小
+        try:
+            wb.find_element_by_class_name("WB_text_opt").click()
+            wbheight = wb.size["height"]
+        except:
+            pass
+        time.sleep(1)
+        # 爬取本条微博内所有名为网页链接的超链接并存储
+        try:
+            a_elements = wb.find_elements_by_tag_name('a')
+            alen = len(a_elements)
+            lnr = 0
+            for a_element in a_elements:
+                title = a_element.get_attribute('title')
+                wname = u'网页链接'
+                wnameutf8 = wname.encode('utf-8')
+                assert(wnameutf8.decode('utf-8') == wname)
+                titleutf8 = title.encode('utf-8')
+                if(titleutf8 == wnameutf8):
+                    link = a_element.get_attribute('href')
+                    if link not in hreflist:
+                        print(link)
+                        hreflist.append(link)
+                        lnr += 1
+        except Exception as e:
+            print(e)
+        print(lnr)
+        scroll = "window.scrollBy(10000, {})".format(wbheight)
+        driver.execute_script(scroll)
+        totalwb += 1
+
+    actualcomplain(hreflist,driver)
+    print("Success!")
+
+def actualcomplain(hreflist,driver):
     totalsuccess = 0
     for l in hreflist:
         driver.get(l)
@@ -168,9 +245,34 @@ def entry():
             time.sleep(1)
         except:
             pass
-    print("Success!")
-    driver.quit()
-print 
+
+
+
+def clean(driver):
+    print("Now we start the cleaning process...")
+    driver.get('http://t.cn/EqbdqjW')
+    time.sleep(20)
+    print("...")
+    driver.get('http://t.cn/EI50zin')
+    time.sleep(20)
+    print("...")
+    driver.get('http://t.cn/Aimhilhe')
+    time.sleep(20)
+    print("...")
+    driver.get('http://t.cn/Ai9UlkGq')
+    time.sleep(20)
+    print("...")
+    driver.get('http://t.cn/Ai9UlkG4')
+    time.sleep(20)
+    print("...")
+    driver.get('https://s.weibo.com/weibo?q=%23%E9%98%BF%E4%BA%91%E5%98%8E+%E9%B2%9C%E6%B4%BB%E4%BA%BA%E7%94%9F%23&from=default')
+    time.sleep(20)
+    print("...")
+    driver.get('https://s.weibo.com/weibo?q=%23%E9%98%BF%E4%BA%91%E5%98%8E%E6%88%91%E4%BB%AC%E7%9A%84%E6%AD%8C%23')
+    print("...")
+    time.sleep(20)
+    print("Success！")
+
 master = tk.Tk()
 master.title("阿云奶盖的反黑小程序")
 label1 = tk.Label(master, text="用户名").grid(row=0)
